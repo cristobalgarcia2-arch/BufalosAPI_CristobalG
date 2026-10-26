@@ -1,8 +1,12 @@
-﻿namespace BufalosAPI.Models
+namespace BufalosAPI.Models
 {
     public class Categoria
     {
-        public int Id_Categoria { get; set; }
+        public int Id { get; set; }
         public string Nombre { get; set; } = string.Empty;
+        public string? Descripcion { get; set; }
+        public bool Activo { get; set; } = true;
+
+        public int Id_Categoria => Id;
     }
 }

@@ -1,7 +1,11 @@
-﻿.vs/
+.vs/
 [Bb]in/
-[Ob]j/
+[Oo]bj/
 out/
 *.user
 appsettings.Development.json
 appsettings.Production.json
+node_modules/
+dist/
+.env
+

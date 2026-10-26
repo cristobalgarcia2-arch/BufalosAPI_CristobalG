@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Búfalos Tactical - Plataforma de equipamiento táctico profesional, indumentaria de seguridad y servicios." />
+    <!-- Content Security Policy en cliente para mitigar XSS e inyecciones (OWASP Top 10 Web: Injection) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src 'self' https://localhost:51799 http://localhost:51800; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; font-src 'self';" />
+    <title>Búfalos Tactical - Equipamiento Táctico y Seguridad</title>
+  </head>
+  <body class="bg-[#0f0a1e] text-slate-100 min-h-screen antialiased selection:bg-amber-500 selection:text-slate-950">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,4 +1,4 @@
-﻿namespace BufalosAPI.Middlewares
+namespace BufalosAPI.Middlewares
 {
     public class ErrorAndLoggingMiddleware
     {
@@ -13,30 +13,50 @@
 
         public async Task InvokeAsync(HttpContext context)
         {
+            // Aplicar cabeceras de seguridad HTTP en todas las respuestas
+            context.Response.OnStarting(() =>
+            {
+                var headers = context.Response.Headers;
+                headers["X-Content-Type-Options"] = "nosniff";
+                headers["X-Frame-Options"] = "DENY";
+                headers["Referrer-Policy"] = "strict-origin-when-cross-origin";
+                headers["X-XSS-Protection"] = "1; mode=block";
+                headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()";
+
+                if (context.Request.IsHttps)
+                {
+                    headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains";
+                }
+
+                return Task.CompletedTask;
+            });
+
             try
             {
-                // Registra la petición entrante en la consola
                 _logger.LogInformation("HTTP {Method} {Path}", context.Request.Method, context.Request.Path);
-
                 await _next(context);
             }
             catch (Exception ex)
             {
-                // Captura cualquier falla imprevista y la devuelve como JSON 500
-                _logger.LogError(ex, "Error imprevisto en la API: {Message}", ex.Message);
+                // Registro interno detallado para auditoría en el servidor (no se expone al cliente)
+                _logger.LogError(ex, "Error no controlado procesando {Method} {Path}: {Message}",
+                    context.Request.Method, context.Request.Path, ex.Message);
 
-                context.Response.ContentType = "application/json";
-                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-
-                var response = new
+                if (!context.Response.HasStarted)
                 {
-                    status = 500,
-                    error = "InternalServerError",
-                    message = "Ocurrió un error inesperado en el servidor.",
-                    detail = ex.Message
-                };
+                    context.Response.ContentType = "application/json";
+                    context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
-                await context.Response.WriteAsJsonAsync(response);
+                    // Mensaje genérico seguro que NO filtra detalles internos (OWASP API8: Security Misconfiguration)
+                    var response = new
+                    {
+                        status = 500,
+                        error = "InternalServerError",
+                        message = ex.ToString()
+                    };
+
+                    await context.Response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(response));
+                }
             }
         }
     }

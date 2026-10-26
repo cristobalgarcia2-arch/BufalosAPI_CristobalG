@@ -1,0 +1,11 @@
+.vs/
+[Bb]in/
+[Oo]bj/
+out/
+*.user
+appsettings.Development.json
+appsettings.Production.json
+node_modules/
+dist/
+.env
+

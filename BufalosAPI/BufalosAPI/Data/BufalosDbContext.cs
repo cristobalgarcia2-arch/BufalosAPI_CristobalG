@@ -52,7 +52,7 @@ namespace BufalosAPI.Data
                 e.HasKey(p => p.Id);
                 e.Property(p => p.Id).HasColumnName("Id_Producto");
                 e.Property(p => p.Nombre).HasColumnName("Nombre");
-                e.Property(p => p.Descripcion).HasColumnName("Descripcion");
+                e.Property(p => p.Descripcion).HasColumnName("Descripcion").HasColumnType("nvarchar(max)");
                 e.Property(p => p.Precio).HasColumnName("Precio").HasColumnType("decimal(10,2)");
                 e.Property(p => p.Stock).HasColumnName("Stock");
                 e.Property(p => p.CategoriaId).HasColumnName("Id_Categoria");

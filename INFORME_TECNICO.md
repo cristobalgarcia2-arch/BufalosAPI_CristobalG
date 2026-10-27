@@ -3,7 +3,7 @@
 **Asignatura:** Lenguaje Programación Web II (UT2)  
 **Docente:** Enso Guidotti  
 **Fecha:** Octubre 2026  
-**Repositorio Monorepo:** https://github.com/Gobert20/BufalosAPI  
+**Repositorio de GitHub:** https://github.com/cristobalgarcia2-arch/BufalosAPI_CristobalG  
 
 ---
 

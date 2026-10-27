@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace BufalosAPI.Models
 {
     public class PermisoUsuario
@@ -9,6 +11,7 @@ namespace BufalosAPI.Models
         public DateTime FechaExpiracion { get; set; }
         public string? Estado { get; set; } = "Activo";
 
+        [JsonIgnore]
         public Usuario? Usuario { get; set; }
 
         // Propiedades de compatibilidad

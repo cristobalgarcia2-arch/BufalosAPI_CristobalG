@@ -168,10 +168,13 @@ namespace BufalosAPI.Endpoints
                             if (usuarioActual.FechaNacimiento.Value.Date > hoy.AddYears(-edadUsuario)) edadUsuario--;
                         }
 
-                        bool autorizacionEdad = usuarioActual.Permisos.Any(p =>
-                            p.Estado == "Activo" &&
+                        bool autorizacionEdad = usuarioActual.Permisos != null && usuarioActual.Permisos.Any(p =>
+                            string.Equals(p.Estado, "Activo", StringComparison.OrdinalIgnoreCase) &&
                             p.FechaExpiracion > DateTime.UtcNow &&
-                            (p.TipoPermiso.Contains("Edad", StringComparison.OrdinalIgnoreCase) || p.TipoPermiso.Contains("+18")));
+                            !string.IsNullOrWhiteSpace(p.TipoPermiso) &&
+                            (p.TipoPermiso.Contains("Edad", StringComparison.OrdinalIgnoreCase) ||
+                             p.TipoPermiso.Contains("18") ||
+                             p.TipoPermiso.Contains("Mayor", StringComparison.OrdinalIgnoreCase)));
 
                         if (edadUsuario < prod.RestriccionEdad && !autorizacionEdad)
                         {
@@ -186,9 +189,10 @@ namespace BufalosAPI.Endpoints
                     // Validación de Solo Personal Autorizado
                     if (prod.SoloPersonalAutorizado && !esAdmin)
                     {
-                        bool esAutorizado = usuarioActual.Permisos.Any(p =>
-                            p.Estado == "Activo" &&
+                        bool esAutorizado = usuarioActual.Permisos != null && usuarioActual.Permisos.Any(p =>
+                            string.Equals(p.Estado, "Activo", StringComparison.OrdinalIgnoreCase) &&
                             p.FechaExpiracion > DateTime.UtcNow &&
+                            !string.IsNullOrWhiteSpace(p.TipoPermiso) &&
                             (p.TipoPermiso.Contains("Personal Autorizado", StringComparison.OrdinalIgnoreCase) ||
                              p.TipoPermiso.Contains("Fuerzas", StringComparison.OrdinalIgnoreCase) ||
                              p.TipoPermiso.Contains("Seguridad", StringComparison.OrdinalIgnoreCase)));
@@ -206,9 +210,10 @@ namespace BufalosAPI.Endpoints
                     // Validación de Requiere Permiso
                     if (prod.RequierePermiso && !esAdmin)
                     {
-                        bool tienePermiso = usuarioActual.Permisos.Any(p =>
-                            p.Estado == "Activo" &&
+                        bool tienePermiso = usuarioActual.Permisos != null && usuarioActual.Permisos.Any(p =>
+                            string.Equals(p.Estado, "Activo", StringComparison.OrdinalIgnoreCase) &&
                             p.FechaExpiracion > DateTime.UtcNow &&
+                            !string.IsNullOrWhiteSpace(p.TipoPermiso) &&
                             (p.TipoPermiso.Contains("Armas", StringComparison.OrdinalIgnoreCase) ||
                              p.TipoPermiso.Contains("Caza", StringComparison.OrdinalIgnoreCase) ||
                              p.TipoPermiso.Contains("Regulado", StringComparison.OrdinalIgnoreCase) ||

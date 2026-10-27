@@ -29,9 +29,9 @@ namespace BufalosAPI.Endpoints
 
                 if (!string.IsNullOrWhiteSpace(buscar))
                 {
-                    var term = buscar.Trim().ToLower();
-                    query = query.Where(p => p.Nombre.ToLower().Contains(term) ||
-                                            (p.Descripcion != null && p.Descripcion.ToLower().Contains(term)));
+                    var term = buscar.Trim();
+                    query = query.Where(p => EF.Functions.Like(p.Nombre, $"%{term}%") ||
+                                            (p.Descripcion != null && EF.Functions.Like(p.Descripcion, $"%{term}%")));
                 }
 
                 if (idCategoria.HasValue && idCategoria.Value > 0)
